@@ -284,7 +284,7 @@ MIT License - feel free to use for personal or commercial projects.
 
 - Issues: Create on GitHub
 - Discussions: GitHub Discussions
-- Email: support@oedxai.com
+- Email: oedxgiditals@gmail.com
 
 ## 🎯 Roadmap
 
