@@ -1,0 +1,79 @@
+{
+  "folders": [
+    {
+      "path": "backend",
+      "name": "Backend (FastAPI)"
+    },
+    {
+      "path": "frontend",
+      "name": "Frontend (Next.js)"
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "${workspaceFolder:Backend (FastAPI)}/venv/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": ["--line-length=100"],
+    "[python]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "ms-python.python"
+    },
+    "[typescript]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "editor.formatOnPaste": true,
+    "editor.rulers": [88, 100],
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/node_modules": true,
+      "**/.next": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "ms-vscode.cpptools-extension-pack",
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "bradlc.vscode-tailwindcss",
+      "formulahendry.code-runner",
+      "Thunder Client.thunder-client",
+      "ms-vscode-remote.remote-containers",
+      "GitHub.copilot"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Backend (Python)",
+        "type": "python",
+        "request": "launch",
+        "module": "uvicorn",
+        "args": ["app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"],
+        "jinja": true,
+        "cwd": "${workspaceFolder:Backend (FastAPI)}",
+        "console": "integratedTerminal"
+      },
+      {
+        "name": "Frontend (Next.js)",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder:Frontend (Next.js)}/node_modules/.bin/next",
+        "args": ["dev"],
+        "cwd": "${workspaceFolder:Frontend (Next.js)}",
+        "console": "integratedTerminal"
+      }
+    ]
+  }
+}

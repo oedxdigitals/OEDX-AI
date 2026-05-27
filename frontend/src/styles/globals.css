@@ -1,0 +1,135 @@
+/**
+ * Global Styles
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply border-dark-100;
+}
+
+html {
+  @apply scroll-smooth;
+  scrollbar-gutter: stable;
+}
+
+body {
+  @apply bg-dark-950 text-gray-100 font-sans;
+  background: linear-gradient(135deg, #0f172a 0%, #030712 100%);
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-900 rounded-lg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-accent-purple rounded-lg hover:bg-accent-cyan transition-colors;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-accent-cyan;
+}
+
+/* Selection Styles */
+::selection {
+  @apply bg-accent-purple bg-opacity-50 text-white;
+}
+
+/* Smooth animations */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* Custom scrollbar for messages */
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  @apply bg-accent-purple bg-opacity-30 rounded-full hover:bg-opacity-50 transition-all;
+}
+
+/* Code block styling */
+code {
+  @apply bg-dark-900 rounded px-1.5 py-0.5 font-mono text-sm text-accent-cyan;
+}
+
+pre {
+  @apply bg-dark-900 rounded-lg p-4 overflow-x-auto border border-dark-800;
+}
+
+pre code {
+  @apply bg-transparent px-0 py-0 text-gray-100;
+}
+
+/* Link styling */
+a {
+  @apply text-accent-cyan hover:text-accent-purple transition-colors underline;
+}
+
+/* Loading states */
+.skeleton {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  @apply bg-dark-800;
+}
+
+/* Floating animation */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Fade animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
