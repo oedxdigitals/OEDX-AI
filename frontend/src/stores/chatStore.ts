@@ -2,167 +2,67 @@
  * Chat Store using Zustand
  */
 
-import { create } from 'zustand';
-import { Message, Conversation } from '@/types';
-import { apiClient } from '@/lib/api';
+import { create } from "zustand";
 
-interface ChatState {
-  // Conversations
-  conversations: Conversation[];
-  currentConversationId: string | null;
-  loading: boolean;
-  error: string | null;
+export type Message = {
+  role: "user" | "assistant";
+  content: string;
+};
 
-  // Messages
+type ChatState = {
   messages: Message[];
-  isStreaming: boolean;
-  streamingMessageId: string | null;
+  input: string;
+  chatId: number;
+  loading: boolean;
+  abortController: AbortController | null;
 
-  // Actions
-  setCurrentConversation: (id: string | null) => void;
-  loadConversations: () => Promise<void>;
-  createNewConversation: (title: string) => Promise<string>;
-  deleteConversation: (id: string) => Promise<void>;
-  renameConversation: (id: string, title: string) => Promise<void>;
-  archiveConversation: (id: string) => Promise<void>;
-  loadMessages: (conversationId: string) => Promise<void>;
-  addMessage: (message: Message) => void;
-  setLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
-  setStreaming: (streaming: boolean, messageId?: string) => void;
-  clear: () => void;
-}
+  setInput: (value: string) => void;
+  addMessage: (msg: Message) => void;
+  setMessages: (msgs: Message[]) => void;
+  resetChat: () => void;
+
+  setLoading: (value: boolean) => void;
+  setAbortController: (c: AbortController | null) => void;
+
+  newChat: () => void;
+};
 
 export const useChatStore = create<ChatState>((set, get) => ({
-  conversations: [],
-  currentConversationId: null,
-  loading: false,
-  error: null,
   messages: [],
-  isStreaming: false,
-  streamingMessageId: null,
+  input: "",
+  chatId: Date.now(),
+  loading: false,
+  abortController: null,
 
-  setCurrentConversation: (id) => {
-    set({ currentConversationId: id });
-    if (id) {
-      get().loadMessages(id);
-    }
-  },
+  setInput: (value) => set({ input: value }),
 
-  loadConversations: async () => {
-    set({ loading: true, error: null });
-    try {
-      const conversations = await apiClient.listConversations();
-      set({ conversations, loading: false });
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : 'Failed to load conversations',
-        loading: false,
-      });
-    }
-  },
+  addMessage: (msg) =>
+    set((state) => ({ messages: [...state.messages, msg] })),
 
-  createNewConversation: async (title: string) => {
-    try {
-      const conversation = await apiClient.createConversation(title);
-      set((state) => ({
-        conversations: [conversation, ...state.conversations],
-      }));
-      return conversation.id;
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : 'Failed to create conversation',
-      });
-      throw error;
-    }
-  },
+  setMessages: (msgs) => set({ messages: msgs }),
 
-  deleteConversation: async (id: string) => {
-    try {
-      await apiClient.deleteConversation(id);
-      set((state) => ({
-        conversations: state.conversations.filter((c) => c.id !== id),
-        currentConversationId:
-          state.currentConversationId === id ? null : state.currentConversationId,
-      }));
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : 'Failed to delete conversation',
-      });
-      throw error;
-    }
-  },
+  setLoading: (value) => set({ loading: value }),
 
-  renameConversation: async (id: string, title: string) => {
-    try {
-      await apiClient.updateConversation(id, title);
-      set((state) => ({
-        conversations: state.conversations.map((c) =>
-          c.id === id ? { ...c, title } : c
-        ),
-      }));
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : 'Failed to rename conversation',
-      });
-      throw error;
-    }
-  },
+  setAbortController: (c) => set({ abortController: c }),
 
-  archiveConversation: async (id: string) => {
-    try {
-      await apiClient.archiveConversation(id);
-      set((state) => ({
-        conversations: state.conversations.filter((c) => c.id !== id),
-      }));
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : 'Failed to archive conversation',
-      });
-      throw error;
-    }
-  },
-
-  loadMessages: async (conversationId: string) => {
-    set({ loading: true, error: null });
-    try {
-      const conversation = await apiClient.getConversation(conversationId);
-      set({ messages: conversation.messages, loading: false });
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : 'Failed to load messages',
-        loading: false,
-      });
-    }
-  },
-
-  addMessage: (message: Message) => {
-    set((state) => ({
-      messages: [...state.messages, message],
-    }));
-  },
-
-  setLoading: (loading: boolean) => {
-    set({ loading });
-  },
-
-  setError: (error: string | null) => {
-    set({ error });
-  },
-
-  setStreaming: (streaming: boolean, messageId?: string) => {
-    set({ isStreaming: streaming, streamingMessageId: messageId });
-  },
-
-  clear: () => {
+  resetChat: () =>
     set({
-      conversations: [],
-      currentConversationId: null,
       messages: [],
+      input: "",
       loading: false,
-      error: null,
-      isStreaming: false,
-      streamingMessageId: null,
+    }),
+
+  newChat: () => {
+    const { abortController } = get();
+
+    if (abortController) abortController.abort();
+
+    set({
+      messages: [],
+      input: "",
+      chatId: Date.now(),
+      loading: false,
+      abortController: null,
     });
   },
 }));
