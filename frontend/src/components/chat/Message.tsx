@@ -12,8 +12,7 @@ import { motion } from 'framer-motion';
 import { Copy, Check } from 'lucide-react';
 import { Message as MessageType } from '@/types';
 import { copyToClipboard } from '@/lib/utils';
-import { showToast } from './Toast';
-
+import { showToast } from '@/components/common/Toast';
 interface MessageProps {
   message: MessageType;
   isStreaming?: boolean;

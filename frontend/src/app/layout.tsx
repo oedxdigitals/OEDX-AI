@@ -1,10 +1,8 @@
-'use client';
-
 /**
  * Root Layout
  */
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import type { Metadata } from 'next';
 import { ToastProvider } from '@/components/common/Toast';
 import '@/styles/globals.css';
@@ -22,16 +20,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    // Prevent body scroll when needed
-    const preventScroll = (e: WheelEvent) => {
-      // Allow scroll
-    };
 
-    return () => {
-      document.removeEventListener('wheel', preventScroll);
-    };
-  }, []);
 
   return (
     <html lang="en">
